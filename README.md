@@ -1,6 +1,9 @@
 # Don-t-Starve
 Учебный командный проект первого курса Колледжа Топ - веб игра на JavaScript.
 
+![Версия](https://img.shields.io/badge/версия_0.0.1-blue)
+![Статус](https://img.shields.io/badge/статус-в%20разработке-yellow)
+
 #### Командная структура
 
 > "Мы поделились на 6 команд. У каждой своя зона ответственности.
@@ -34,3 +37,8 @@
   <a href="https://github.com/nktnvrvskj"><img src="https://github.com/nktnvrvskj.png" width="50" style="border-radius: 50%;"></a>
   <a href="https://github.com/gearencore"><img src="https://github.com/gearencore.png" width="50" style="border-radius: 50%;"></a>
 </div>
+
+> [!IMPORTANT]
+> Если вы еще не в команде, напишите комментарий в Issue с вашим именем и командой к которой хотите примкнуть.
+> Разарботка каждой командой ведется в отдельных ветках и проверяется лидом, после создаем PR и отправляем в ветку `develop`.
+> Разарботчикам из команды `Integration & QA` можно создавать файлы в `main` или вести документацию в `wiki`.
