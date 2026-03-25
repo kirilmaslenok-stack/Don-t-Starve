@@ -2,9 +2,20 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+
 window.AssetLoader.registerImage('player', 'assets/images/player.png');
 window.AssetLoader.registerImage('tree', 'assets/images/tree.png');
 window.AssetLoader.onComplete = () => console.log('Ready to render!');
+
+window.GameState.init();
+console.log("Game state:", window.GameState.getState());
+window.GameState.updateScore(10);
+
+const enemy1 = window.GameAI.addEnemy(100, 100, 50);
+const enemy2 = window.GameAI.addEnemy(300, 200, 75);
+window.GameAI.updateEnemies();
+console.log("Enemies count:", window.GameAI.getEnemies().length);
+
 // Игровой цикл
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -15,12 +26,11 @@ function gameLoop() {
     
     // Рисуем игрока
     drawPlayer(ctx, 400, 300);
-    
-    requestAnimationFrame(gameLoop);
     // Рисуем врагов
-    drawEnemy(ctx, 300, 200, 'spider');
-    drawEnemy(ctx, 600, 350, 'hound');
-    
+    // drawEnemy(ctx, 300, 200, 'spider');
+    // drawEnemy(ctx, 600, 350, 'hound');
+    drawSpider(ctx, 300, 200)
+
     // Рисуем эффекты
     drawPickupEffect(ctx, 450, 250);
     
