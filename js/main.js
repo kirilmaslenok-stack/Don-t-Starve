@@ -12,12 +12,11 @@ function gameLoop() {
     
     // Рисуем игрока
     drawPlayer(ctx, 400, 300);
-    
-    requestAnimationFrame(gameLoop);
     // Рисуем врагов
-    drawEnemy(ctx, 300, 200, 'spider');
-    drawEnemy(ctx, 600, 350, 'hound');
-    
+    // drawEnemy(ctx, 300, 200, 'spider');
+    // drawEnemy(ctx, 600, 350, 'hound');
+    drawSpider(ctx, 300, 200)
+
     // Рисуем эффекты
     drawPickupEffect(ctx, 450, 250);
     
@@ -33,3 +32,6 @@ function gameLoop() {
 gameLoop();
 
 helloCore();
+window.GameState.init();
+console.log("Game state:", window.GameState.getState());
+window.GameState.updateScore(10);
