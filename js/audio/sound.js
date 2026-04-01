@@ -55,14 +55,21 @@ window.SoundManager = {
     },
     
     // НОВЫЙ МЕТОД: фоновая музыка с зацикливанием
-    playMusic: function(name, volume = 0.3) {
-        const music = this.sounds[name];
-        if(music) {
-            music.loop = true;
-            music.volume = volume;
-            music.play().catch(e => console.log("Music error:", e));
+// Добавить проверку на зацикливание, если файл уже играет
+playMusic: function(name, volume = 0.3) {
+    const music = this.sounds[name];
+    if(music) {
+        if (!music.paused) {
+            music.pause();
+            music.currentTime = 0;
         }
-    },
+        music.loop = true;
+        music.volume = volume;
+        music.play().catch(e => console.log("Music error:", e));
+    } else {
+        console.warn(`⚠️ Music track not found: ${name}`);
+    }
+},
     
     // НОВЫЙ МЕТОД: остановка музыки
     stopMusic: function(name) {
