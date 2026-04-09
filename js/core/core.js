@@ -1,7 +1,75 @@
 //---------------------------------------------------------------
 // Создание игрока, сбор ресурсов, смена дня и ночи, игровой цикл
 //---------------------------------------------------------------
-// 
+
+let nameGroup = "Core Mechanics"
+// Функция для рисования тела игрока (жёлтый круг)
+window.drawPlayerBody = function(ctx, x, y) {
+    // TODO: Жёлтый круг радиусом 15 в точке (x, y)
+    // Используй: fillStyle = 'yellow', beginPath, arc, fill
+    // 👇 Твой код здесь
+  console.log("Работает")
+
+}
+
+// Функция для игрового цикла (заглушка)
+window.startGameLoop = function() {
+    console.log("🎮 Game loop initialized");
+    return true;
+};
+
+// Функция для обновления игрового состояния
+window.updateGame = function(deltaTime) {
+    console.log("🔄 Game update: " + deltaTime);
+};
+
+function helloCore() {
+    console.log("⚙️ Core Mechanics ready");
+    return { status: "ready", module: "core" };
+}
+
+// Функция для игрового цикла (заглушка)
+window.startGameLoop = function() {
+    console.log("🎮 Game loop initialized");
+    return true;
+};
+
+// Функция для обновления игрового состояния
+window.updateGame = function(deltaTime) {
+    console.log("🔄 Game update: " + deltaTime);
+};
+
+// Функция для рисования полного игрока
+window.drawPlayer = function(ctx, x, y) {
+    // TODO: Вызвать drawPlayerBody и drawPlayerEyes
+    window.drawPlayerBody(ctx, x, y);
+    window.drawPlayerEyes(ctx, x, y);
+    
+    // Бонус: добавить улыбку
+    // ctx.beginPath();
+    // ctx.arc(x, y+5, 8, 0.1, Math.PI - 0.1);
+    // ctx.strokeStyle = 'black';
+    // ctx.stroke();
+}
+
+// Функция для рисования глаз игрока
+window.drawPlayerEyes = function(ctx, x, y) {
+    // TODO: Два белых круга радиусом 3 на (x-5, y-5) и (x+5, y-5)
+    // TODO: Два чёрных круга радиусом 1.5 внутри них
+    // 👇 Твой код здесь
+    
+}
+
+
+
+// Функция для рисования тела игрока (жёлтый круг)
+window.drawPlayerBody = function(ctx, x, y) {
+    // TODO: Жёлтый круг радиусом 15 в точке (x, y)
+    // Используй: fillStyle = 'yellow', beginPath, arc, fill
+    // 👇 Твой код здесь
+  console.log("Работает")
+
+}
 
 function helloCore() {
     console.log("⚙️ Core Mechanics ready");
@@ -104,7 +172,6 @@ window.CoreGame = {
             console.log(`🌞 Day ${GameState.day}`);
         }
 
-        // После обновления dayTimer добавить:
         const isNight = SoundManager.isNightTime(GameState.dayTimer, GameBalance.DAY_DURATION);
         if(isNight && !this.wasNight) {
             SoundManager.playNightMusic();
@@ -211,26 +278,17 @@ window.CoreGame = {
     if(nearest) {
         const enemyId = nearest.id;
         const defeated = GameAI.damageEnemy(enemyId, GameBalance.PLAYER_DAMAGE);
-        EffectsManager.addHitEffect(nearest.x, nearest.y);  // <-- эффект удара
-        SoundManager.play('click');  // <-- звук
-        // ...
-    }
-}
+        EffectsManager.addHitEffect(nearest.x, nearest.y);
+        SoundManager.play('click');  // <-- Добавить эту строку
         
-        if(nearest) {
-            const enemyId = nearest.id;
-            const defeated = GameAI.damageEnemy(enemyId, GameBalance.PLAYER_DAMAGE);
-            EffectsManager.addHitEffect(nearest.x, nearest.y);
-            SoundManager.play('click');
-            
-            if(defeated) {
-                console.log("💀 Enemy defeated!");
-            }
-            return true;
+        if(defeated) {
+            console.log("💀 Enemy defeated!");
         }
-        
-        return false;
-    },
+        return true;
+    }
+    
+    return false;
+},
     
     // Перезапуск игры
     restart: function() {
@@ -259,12 +317,17 @@ window.CoreGame = {
         for(let enemy of GameAI.getEnemies()) {
             GameRenderer.drawEnemy(enemy.x, enemy.y, enemy.hp, enemy.maxHp);
         }
+
+        // Добавить после отрисовки врагов
+        if(GameBalance.FOG_OF_WAR_ENABLED) {
+            GameRenderer.drawFogOfWar(GameState.player.x, GameState.player.y, GameBalance.VISION_RADIUS);
+        }    
         
         // Игрок
         GameRenderer.drawPlayer(GameState.player.x, GameState.player.y, GameState.player.hp);
         
         // Эффекты
-        // Найти строку EffectsManager.draw(ctx) и заменить на:
+
         EffectsManager.draw(ctx, GameCamera);
         
         // UI панель
@@ -278,6 +341,9 @@ window.CoreGame = {
         // Кнопки
         drawUIButtons(GameRenderer.ctx);
         
+        // После отрисовки UI панели и кнопок добавить:
+        // Эффекты
+        EffectsManager.draw(GameRenderer.ctx);
         // Индикатор цели
         if(GameState.player.targetX !== null) {
             const ctx = GameRenderer.ctx;
@@ -288,6 +354,7 @@ window.CoreGame = {
             ctx.stroke();
         }
 
+
                 // Добавить перед Game Over экраном
         if(GameBalance.SHOW_FPS) {
             ctx.fillStyle = "rgba(0,0,0,0.5)";
@@ -295,8 +362,11 @@ window.CoreGame = {
             ctx.fillStyle = "#0f0";
             ctx.font = "10px monospace";
             ctx.fillText(`FPS: ${this.currentFPS}`, 8, 20);
-}
+        }
         
+        // Добавить перед Game Over экраном
+        drawLowHealthOverlay(ctx, GameState.player.hp);
+
         // Game Over
         if(!GameState.gameActive) {
             const ctx = GameRenderer.ctx;

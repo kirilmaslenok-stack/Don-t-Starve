@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
         window.GameCamera = { x: 0, y: 0, worldToScreen: (x,y) => ({x,y}) };
     }
     
+
     // Инициализация рендерера с камерой
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -23,6 +24,21 @@ window.addEventListener('DOMContentLoaded', () => {
         GameRenderer.init(ctx, GameCamera);
     } else {
         console.error("❌ GameRenderer not loaded!");
+=======
+    function checkAllLoaded() {
+        if(imagesLoaded && soundsLoaded) {
+            console.log("🎮 All resources loaded! Starting game...");
+            GameState.init();
+            SoundManager.playMusic('ambient', 0.3);
+            CoreGame.start();
+            startGameLoop();
+            // Заменить существующий объект imagesToLoad на:
+const imagesToLoad = window.GameAssets.images;
+
+// Заменить существующий объект soundsToLoad на:
+const soundsToLoad = window.GameAssets.sounds;
+        }
+
     }
     
     // Инициализация обработчика ввода с камерой
