@@ -300,36 +300,67 @@ window.CoreGame = {
     },
     
     // Отрисовка (вызывается из gameLoop)
-    render: function() {
+     render: function() {
+        if(!GameRenderer.ctx || !GameState) return;
+        
+        const ctx = GameRenderer.ctx;
+        
+        // Очистка и фон
         GameRenderer.drawGround();
         
         // Деревья
-        for(let tree of GameState.trees) {
+        for(let tree of GameState.world.trees) {
             GameRenderer.drawTree(tree.x, tree.y);
         }
         
         // Ягоды
-        for(let berry of GameState.berries) {
+        for(let berry of GameState.world.berries) {
             GameRenderer.drawBerry(berry.x, berry.y, berry.count);
         }
         
         // Враги
-        for(let enemy of GameAI.getEnemies()) {
-            GameRenderer.drawEnemy(enemy.x, enemy.y, enemy.hp, enemy.maxHp);
+        for(let enemy of GameState.enemies) {
+            GameRenderer.drawEnemy(enemy.x, enemy.y, enemy.hp, enemy.maxHp, enemy.type);
         }
-
-        // Добавить после отрисовки врагов
-        if(GameBalance.FOG_OF_WAR_ENABLED) {
-            GameRenderer.drawFogOfWar(GameState.player.x, GameState.player.y, GameBalance.VISION_RADIUS);
-        }    
         
         // Игрок
         GameRenderer.drawPlayer(GameState.player.x, GameState.player.y, GameState.player.hp);
         
         // Эффекты
-
-        EffectsManager.draw(ctx, GameCamera);
+        if(window.EffectsManager && GameCamera) {
+            EffectsManager.draw(ctx, GameCamera);
+        }
         
+        // UI
+        if(window.drawUIPanel) {
+            drawUIPanel(ctx, 
+                GameState.player.hp, 
+                GameState.player.hunger, 
+                GameState.player.wood, 
+                GameState.day
+            );
+        }
+        
+        if(window.drawUIButtons) {
+            drawUIButtons(ctx);
+        }
+        
+        if(window.drawMinimap && GameCamera) {
+            drawMinimap(ctx, GameCamera);
+        }
+        
+        // Game Over экран
+        if(!GameState.gameActive) {
+            ctx.fillStyle = "rgba(0,0,0,0.8)";
+            ctx.fillRect(0, 0, 800, 600);
+            ctx.fillStyle = "#ff6666";
+            ctx.font = "bold 32px monospace";
+            ctx.fillText("GAME OVER", 310, 300);
+            ctx.font = "14px monospace";
+            ctx.fillStyle = "#fff";
+            ctx.fillText("Press RESTART or R", 340, 360);
+        }
+    }
         // UI панель
         drawUIPanel(GameRenderer.ctx, 
             GameState.player.hp, 
