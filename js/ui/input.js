@@ -1,67 +1,52 @@
+// Обработка ввода
 window.InputHandler = {
     canvas: null,
+    camera: null,
     
-    // Коллбэки для действий
-    onGather: null,
-    onAttack: null,
-    onMove: null,
-    onRestart: null,
-    
-    // Инициализация
-    init: function(canvas) {
+    init: function(canvas, camera) {
         this.canvas = canvas;
+        this.camera = camera;
         this.setupEvents();
         console.log("🖱️ InputHandler initialized");
     },
     
-    // Настройка обработчиков событий
     setupEvents: function() {
-        // Левый клик мыши
         this.canvas.addEventListener('click', (e) => {
             const rect = this.canvas.getBoundingClientRect();
-            const x = (e.clientX - rect.left) * (800 / rect.width);
-            const y = (e.clientY - rect.top) * (600 / rect.height);
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
             
-            // Проверка нажатия на кнопки UI
+            // Проверка кнопок UI
             if(x > 20 && x < 110 && y > 545 && y < 580) {
-                if(this.onGather) this.onGather();
-            }
-            else if(x > 120 && x < 210 && y > 545 && y < 580) {
-                if(this.onAttack) this.onAttack();
-            }
-            else if(x > 690 && x < 780 && y > 545 && y < 580) {
-                if(this.onRestart) this.onRestart();
-            }
-            else {
-                if(this.onMove) this.onMove(x, y);
+                if(window.CoreGame) CoreGame.gather();
+            } else if(x > 120 && x < 210 && y > 545 && y < 580) {
+                if(window.CoreGame) CoreGame.attack();
+            } else if(x > 690 && x < 780 && y > 545 && y < 580) {
+                if(window.CoreGame) CoreGame.restart();
+            } else {
+                GameState.setPlayerTarget(x, y, this.camera.x, this.camera.y);
             }
         });
         
-        // Правая кнопка мыши (атака)
         this.canvas.addEventListener('contextmenu', (e) => {
             e.preventDefault();
-            if(this.onAttack) this.onAttack();
+            if(window.CoreGame) CoreGame.attack();
             return false;
         });
         
-        // Клавиатура
         window.addEventListener('keydown', (e) => {
             if(e.key === 'e' || e.key === 'E') {
                 e.preventDefault();
-                if(this.onGather) this.onGather();
+                if(window.CoreGame) CoreGame.gather();
             }
             if(e.key === 'r' || e.key === 'R') {
                 e.preventDefault();
-                if(this.onRestart) this.onRestart();
+                if(window.CoreGame) CoreGame.restart();
             }
         });
-    },
-    
-    // Установка коллбэков
-    setCallbacks: function(callbacks) {
-        this.onGather = callbacks.gather;
-        this.onAttack = callbacks.attack;
-        this.onMove = callbacks.move;
-        this.onRestart = callbacks.restart;
     }
 };
+
+console.log("⌨️ Input ready");
