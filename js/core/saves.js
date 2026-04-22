@@ -65,5 +65,17 @@ class SaveSystem {
 
         this.showMsg("📀 Game Loaded!");
         return true;
+
+      const data = {
+          wood: this.gameState.player.wood,
+          stone: this.gameState.player.stone,
+          day: this.gameState.day,
+          hp: this.gameState.player.hp,
+          hunger: this.gameState.player.hunger,
+          level: this.gameState.experience?.level || 1
+      };
+      localStorage.setItem('gameSave', JSON.stringify(data));
+      this.showMsg("💾 Game Saved!");
     }
+
 }
